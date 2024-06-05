@@ -1,50 +1,38 @@
 CC = gcc
 CFLAGS = `sdl2-config --cflags` -Iinclude
-LDFLAGS = `sdl2-config --libs` -lSDL2_image
+LDFLAGS = `sdl2-config --libs` -lm  # Link with libm
 PREFIX = /usr/local
-
-# Target library name
-TARGET_LIB = build/libraycoast.a
 
 # Source files
 SRC = src/raycoast.c
 OBJ = $(SRC:.c=.o)
 
-# Example source files
+# Example program
 EXAMPLE_SRC = examples/example.c
 EXAMPLE_OBJ = $(EXAMPLE_SRC:.c=.o)
 EXAMPLE_BIN = build/example
 
 # Default target
-all: $(TARGET_LIB) $(EXAMPLE_BIN)
+all: $(OBJ) libraycoast.a example
 
-# Build the static library
-$(TARGET_LIB): $(OBJ)
-	mkdir -p build
-	ar rcs $@ $^
-
-# Build the example
-$(EXAMPLE_BIN): $(EXAMPLE_OBJ) $(TARGET_LIB)
-	$(CC) -o $@ $^ $(LDFLAGS)
-
-# Compile object files
+# Compile C files
 %.o: %.c
-	$(CC) $(CFLAGS) -c $< -o $@
+	$(CC) -c $(CFLAGS) $< -o $@
 
-# Install headers and library
-install: all
-	mkdir -p $(PREFIX)/include/raycoast
-	cp include/raycastlib.h $(PREFIX)/include/raycoast/
-	mkdir -p $(PREFIX)/lib
-	cp $(TARGET_LIB) $(PREFIX)/lib/
+# Link library
+libraycoast.a: $(OBJ)
+	ar rcs build/$@ $^
 
-# Uninstall headers and library
-uninstall:
-	rm -f $(PREFIX)/include/raycastlib/raycoast.h
-	rm -f $(PREFIX)/lib/raycoast.a
+# Build example program
+example: $(EXAMPLE_OBJ) libraycoast.a
+	$(CC) -o $(EXAMPLE_BIN) $(EXAMPLE_OBJ) build/libraycoast.a $(LDFLAGS) -lSDL2_image
 
-# Clean up
 clean:
-	rm -rf $(OBJ) $(EXAMPLE_OBJ) build
+	rm -f $(OBJ) $(EXAMPLE_OBJ) build/libraycoast.a $(EXAMPLE_BIN)
 
-.PHONY: all clean install uninstall
+install: libraycoast.a
+	mkdir -p $(PREFIX)/lib
+	cp -f build/libraycoast.a $(PREFIX)/lib
+
+uninstall:
+	rm -f $(PREFIX)/lib/libraycoast.a
