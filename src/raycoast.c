@@ -21,7 +21,7 @@ bool initializeSDL() {
         return false;
     }
 
-    window = SDL_CreateWindow("Raycasting Test",
+    window = SDL_CreateWindow("Raycasting Game",
                               SDL_WINDOWPOS_CENTERED,
                               SDL_WINDOWPOS_CENTERED,
                               SCREEN_WIDTH, SCREEN_HEIGHT,
