@@ -18,7 +18,7 @@ and now. use `sudo make install` to install the lib. now you can use it!
 
 ### Prerequisites
 
-- SDL2 and SDL2_image (because you can use images and colors as the walls)
+- SDL2 and SDL2_image (idk why lol)
 - A C compiler (e.g., GCC)
 
 ### Building the Library
