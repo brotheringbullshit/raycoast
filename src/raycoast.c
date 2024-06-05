@@ -5,6 +5,16 @@
 SDL_Window *window = NULL;
 SDL_Renderer *renderer = NULL;
 
+// Well-known colors for the walls
+Wall wallColors[] = {
+    {255, 255, 255},  // 0 - White
+    {0, 0, 255},      // 1 - Blue
+    {255, 0, 0},      // 2 - Red
+    {0, 255, 0},      // 3 - Green
+    {255, 255, 0},    // 4 - Yellow
+    {255, 165, 0},    // 5 - Orange
+};
+
 bool initializeSDL() {
     if (SDL_Init(SDL_INIT_VIDEO) != 0) {
         fprintf(stderr, "SDL_Init Error: %s\n", SDL_GetError());
