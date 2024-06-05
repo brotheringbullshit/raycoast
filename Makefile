@@ -1,6 +1,6 @@
 CC = gcc
 CFLAGS = `sdl2-config --cflags` -Iinclude
-LDFLAGS = `sdl2-config --libs` -lm  # Link with libm
+LDFLAGS = `sdl2-config --libs` -lm
 PREFIX = /usr/local
 
 # Source files
@@ -8,7 +8,7 @@ SRC = src/raycoast.c
 OBJ = $(SRC:.c=.o)
 
 # Example program
-EXAMPLE_SRC = examples/example.c
+EXAMPLE_SRC = examples/main.c
 EXAMPLE_OBJ = $(EXAMPLE_SRC:.c=.o)
 EXAMPLE_BIN = build/example
 
@@ -25,7 +25,7 @@ libraycoast.a: $(OBJ)
 
 # Build example program
 example: $(EXAMPLE_OBJ) libraycoast.a
-	$(CC) -o $(EXAMPLE_BIN) $(EXAMPLE_OBJ) build/libraycoast.a $(LDFLAGS) -lSDL2_image
+	$(CC) -o $(EXAMPLE_BIN) $(EXAMPLE_OBJ) build/libraycoast.a $(LDFLAGS)
 
 clean:
 	rm -f $(OBJ) $(EXAMPLE_OBJ) build/libraycoast.a $(EXAMPLE_BIN)
