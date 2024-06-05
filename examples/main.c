@@ -1,7 +1,6 @@
-// this is just used for whenever you installed it or something
-
 #include "raycoast.h"
 
+// Example map with wall types
 int map[MAP_HEIGHT][MAP_WIDTH] = {
     {1, 1, 1, 1, 1, 1, 1, 1},
     {1, 0, 0, 0, 0, 0, 0, 1},
