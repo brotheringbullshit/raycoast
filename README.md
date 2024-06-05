@@ -31,9 +31,10 @@ and now. use `sudo make install` to install the lib. now you can use it!
 ### How To Use Raycoast
 now that you have the lib. it is time to use!
 
-to set the map. you'll have to use:
+if you want to add. colored walls. it is easy too!
+
 ```c
- int map[MAP_HEIGHT][MAP_WIDTH] = {
+int map[MAP_HEIGHT][MAP_WIDTH] = {
     {1, 1, 1, 1, 1, 1, 1, 1},
     {1, 0, 0, 0, 0, 0, 0, 1},
     {1, 0, 0, 0, 0, 0, 0, 1},
@@ -45,72 +46,13 @@ to set the map. you'll have to use:
 };
 ```
 
-If you feel in the mood to add textures or a color. this has it!
-but you'll need SDL2_image or it'll not work.
-
-insert
-
-```c
-SDL_Texture *loadTexture(const char *file, SDL_Renderer *renderer) {
-    SDL_Texture *texture = IMG_LoadTexture(renderer, file);
-    if (!texture) {
-        fprintf(stderr, "IMG_LoadTexture Error: %s\n", IMG_GetError());
-        return NULL;
-    }
-    return texture;
-}
-
-int main(int argc, char *argv[]) {
-    if (!initializeSDL()) {
-        return 1;
-    }
-
-    // Initialize SDL_image
-    if (!(IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG)) {
-        fprintf(stderr, "IMG_Init Error: %s\n", IMG_GetError());
-        closeSDL();
-        return 1;
-    }
-
-    // Load textures
-    SDL_Texture *textures[1];
-    textures[0] = loadTexture("wall_texture.png", renderer);
-    if (!textures[0]) {
-        IMG_Quit();
-        closeSDL();
-        return 1;
-    }
-```
-
-the "wall_texture.png" is supposed to be your wall image. while you can make the wall a color. it is basically like this:
-```c
-SDL_Texture *wallTextures[4];
-    wallTextures[0] = loadTexture("wall_texture_red.png");
-    wallTextures[1] = loadTexture("wall_texture_green.png");
-    wallTextures[2] = loadTexture("wall_texture_blue.png");
-    wallTextures[3] = NULL; // No texture for default walls
-
-    // Define wall colors
-    Wall walls[MAP_HEIGHT][MAP_WIDTH] = {
-        {{false, 255, 255, 255}, {false, 255, 255, 255}, {false, 255, 255, 255}, {false, 255, 255, 255},
-         {false, 255, 255, 255}, {false, 255, 255, 255}, {false, 255, 255, 255}, {false, 255, 255, 255}},
-        {{false, 255, 255, 255}, {true, wallTextures[0]}, {true, wallTextures[3]}, {true, wallTextures[3]},
-         {true, wallTextures[3]}, {true, wallTextures[3]}, {true, wallTextures[3]}, {false, 255, 255, 255}},
-        {{false, 255, 255, 255}, {true, wallTextures[3]}, {false, 255, 255, 255}, {true, wallTextures[3]},
-         {true, wallTextures[3]}, {false, 255, 255, 255}, {true, wallTextures[3]}, {false, 255, 255, 255}},
-        {{false, 255, 255, 255}, {true, wallTextures[3]}, {true, wallTextures[1]}, {true, wallTextures[3]},
-         {true, wallTextures[3]}, {true, wallTextures[3]}, {true, wallTextures[3]}, {false, 255, 255, 255}},
-        {{false, 255, 255, 255}, {true, wallTextures[3]}, {false, 255, 255, 255}, {true, wallTextures[3]},
-         {true, wallTextures[3]}, {false, 255, 255, 255}, {true, wallTextures[3]}, {false, 255, 255, 255}},
-        {{false, 255, 255, 255}, {true, wallTextures[3]}, {false, 255, 255, 255}, {true, wallTextures[3]},
-         {true, wallTextures[3]}, {false, 255, 255, 255}, {true, wallTextures[3]}, {false, 255, 255, 255}},
-        {{false, 255, 255, 255}, {true, wallTextures[3]}, {false, 255, 255, 255}, {true, wallTextures[3]},
-         {true, wallTextures[3]}, {false, 255, 255, 255}, {true, wallTextures[3]}, {false, 255, 255, 255}},
-        {{false, 255, 255, 255}, {false, 255, 255, 255}, {false, 255, 255, 255}, {false, 255, 255, 255},
-         {false, 255, 255, 255}, {false, 255, 255, 255}, {false, 255, 255, 255}, {false, 255, 255, 255}}
-```
-
-so i recommend using the wall texture.
-
+now the walls can be colors. using these numbers:
+0 means white.
+1 means blue.
+2 means red.
+3 means green.
+4 means yellow.
+5 means orange.
+thats all the colors! yes thats the map too.
 
 ### enjoy!
