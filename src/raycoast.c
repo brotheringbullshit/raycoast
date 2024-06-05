@@ -11,7 +11,7 @@ bool initializeSDL() {
         return false;
     }
 
-    window = SDL_CreateWindow("Raycoast Game",
+    window = SDL_CreateWindow("Raycasting Test",
                               SDL_WINDOWPOS_CENTERED,
                               SDL_WINDOWPOS_CENTERED,
                               SCREEN_WIDTH, SCREEN_HEIGHT,
@@ -49,7 +49,7 @@ float dist(float ax, float ay, float bx, float by) {
     return sqrt((bx - ax) * (bx - ax) + (by - ay) * (by - ay));
 }
 
-void castRays(Player *player, Wall walls[MAP_HEIGHT][MAP_WIDTH]) {
+void castRays(Player *player, int map[MAP_HEIGHT][MAP_WIDTH]) {
     float rayAngle = player->angle - (FOV / 2);
     float deltaAngle = (float)FOV / NUM_RAYS;
 
@@ -62,7 +62,7 @@ void castRays(Player *player, Wall walls[MAP_HEIGHT][MAP_WIDTH]) {
         float distanceToWall = 0;
         bool hitWall = false;
         int wallType = 0;
-        int mapX, mapY; // Declare mapX and mapY here
+        int mapX, mapY;
 
         while (!hitWall && distanceToWall < SCREEN_WIDTH) {
             rayX += rayCos;
@@ -73,19 +73,19 @@ void castRays(Player *player, Wall walls[MAP_HEIGHT][MAP_WIDTH]) {
             mapY = (int)(rayY / TILE_SIZE);
 
             if (mapX >= 0 && mapX < MAP_WIDTH && mapY >= 0 && mapY < MAP_HEIGHT) {
-                if (walls[mapY][mapX].r != 255 || walls[mapY][mapX].g != 255 || walls[mapY][mapX].b != 255) {
+                if (map[mapY][mapX] != 0) {
                     hitWall = true;
-                    wallType = mapX;
+                    wallType = map[mapY][mapX];
                 }
             }
         }
 
         int wallHeight = (int)(SCREEN_HEIGHT / distanceToWall * TILE_SIZE);
 
-        if (wallType >= 0 && wallType < MAP_WIDTH) {
-            Uint8 r = walls[mapY][wallType].r;
-            Uint8 g = walls[mapY][wallType].g;
-            Uint8 b = walls[mapY][wallType].b;
+        if (wallType >= 0 && wallType < sizeof(wallColors) / sizeof(Wall)) {
+            Uint8 r = wallColors[wallType].r;
+            Uint8 g = wallColors[wallType].g;
+            Uint8 b = wallColors[wallType].b;
             drawRect(ray, (SCREEN_HEIGHT - wallHeight) / 2, 1, wallHeight, r, g, b);
         }
 
@@ -119,14 +119,11 @@ void handleInput(Player *player, bool *quit) {
     }
 }
 
-void renderFrame(Player *player, Wall walls[MAP_HEIGHT][MAP_WIDTH]) {
-    // Clear screen
+void renderFrame(Player *player, int map[MAP_HEIGHT][MAP_WIDTH]) {
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
 
-    // Cast rays
-    castRays(player, walls);
+    castRays(player, map);
 
-    // Update screen
     SDL_RenderPresent(renderer);
 }
