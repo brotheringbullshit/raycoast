@@ -111,3 +111,6 @@ SDL_Texture *wallTextures[4];
 ```
 
 so i recommend using the wall texture.
+
+
+### enjoy!
