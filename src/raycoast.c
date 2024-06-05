@@ -45,11 +45,6 @@ void drawRect(int x, int y, int width, int height, Uint8 r, Uint8 g, Uint8 b) {
     SDL_RenderFillRect(renderer, &rect);
 }
 
-void drawTexture(SDL_Texture *texture, int x, int y, int width, int height) {
-    SDL_Rect dst = {x, y, width, height};
-    SDL_RenderCopy(renderer, texture, NULL, &dst);
-}
-
 float dist(float ax, float ay, float bx, float by) {
     return sqrt((bx - ax) * (bx - ax) + (by - ay) * (by - ay));
 }
@@ -67,17 +62,18 @@ void castRays(Player *player, Wall walls[MAP_HEIGHT][MAP_WIDTH]) {
         float distanceToWall = 0;
         bool hitWall = false;
         int wallType = 0;
+        int mapX, mapY; // Declare mapX and mapY here
 
         while (!hitWall && distanceToWall < SCREEN_WIDTH) {
             rayX += rayCos;
             rayY += raySin;
             distanceToWall += 1;
 
-            int mapX = (int)(rayX / TILE_SIZE);
-            int mapY = (int)(rayY / TILE_SIZE);
+            mapX = (int)(rayX / TILE_SIZE);
+            mapY = (int)(rayY / TILE_SIZE);
 
             if (mapX >= 0 && mapX < MAP_WIDTH && mapY >= 0 && mapY < MAP_HEIGHT) {
-                if (walls[mapY][mapX].isTexture || walls[mapY][mapX].texture != NULL) {
+                if (walls[mapY][mapX].r != 255 || walls[mapY][mapX].g != 255 || walls[mapY][mapX].b != 255) {
                     hitWall = true;
                     wallType = mapX;
                 }
@@ -87,17 +83,10 @@ void castRays(Player *player, Wall walls[MAP_HEIGHT][MAP_WIDTH]) {
         int wallHeight = (int)(SCREEN_HEIGHT / distanceToWall * TILE_SIZE);
 
         if (wallType >= 0 && wallType < MAP_WIDTH) {
-            if (walls[wallType][mapY].isTexture) {
-                SDL_Texture *texture = walls[wallType][mapY].texture;
-                int textureHeight = SCREEN_HEIGHT / distanceToWall;
-                int textureOffset = (SCREEN_HEIGHT - textureHeight) / 2;
-                drawTexture(texture, ray, textureOffset, 1, textureHeight);
-            } else {
-                Uint8 r = walls[wallType][mapY].r;
-                Uint8 g = walls[wallType][mapY].g;
-                Uint8 b = walls[wallType][mapY].b;
-                drawRect(ray, (SCREEN_HEIGHT - wallHeight) / 2, 1, wallHeight, r, g, b);
-            }
+            Uint8 r = walls[mapY][wallType].r;
+            Uint8 g = walls[mapY][wallType].g;
+            Uint8 b = walls[mapY][wallType].b;
+            drawRect(ray, (SCREEN_HEIGHT - wallHeight) / 2, 1, wallHeight, r, g, b);
         }
 
         rayAngle += deltaAngle;
@@ -140,21 +129,4 @@ void renderFrame(Player *player, Wall walls[MAP_HEIGHT][MAP_WIDTH]) {
 
     // Update screen
     SDL_RenderPresent(renderer);
-}
-
-SDL_Texture *loadTexture(const char *file) {
-    SDL_Surface *surface = IMG_Load(file);
-    if (!surface) {
-        fprintf(stderr, "IMG_Load Error: %s\n", IMG_GetError());
-        return NULL;
-    }
-
-    SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surface);
-    SDL_FreeSurface(surface);
-    if (!texture) {
-        fprintf(stderr, "SDL_CreateTextureFromSurface Error: %s\n", SDL_GetError());
-        return NULL;
-    }
-
-    return texture;
 }
