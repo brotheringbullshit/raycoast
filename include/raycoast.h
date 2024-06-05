@@ -28,8 +28,8 @@ typedef struct {
 bool initializeSDL();
 void closeSDL();
 void drawRect(int x, int y, int width, int height, Uint8 r, Uint8 g, Uint8 b);
-void castRays(Player *player, Wall walls[MAP_HEIGHT][MAP_WIDTH]);
+void castRays(Player *player, int map[MAP_HEIGHT][MAP_WIDTH]);
 void handleInput(Player *player, bool *quit);
-void renderFrame(Player *player, Wall walls[MAP_HEIGHT][MAP_WIDTH]);
+void renderFrame(Player *player, int map[MAP_HEIGHT][MAP_WIDTH]);
 
 #endif // RAYCOAST_H
